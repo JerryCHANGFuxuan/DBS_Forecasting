@@ -9,10 +9,18 @@ Created on Sat Aug 13 11:39:50 2022
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
+import joblib
+
 @app.route("/", methods= ["GET","POST"])
 def index():
-    if request.method == "post":
-        return(render_template("index.html", result1 = "temp", result2 = "temp"))
+    if request.method == "POST":
+        rates = float(request.form.get("rates"))
+        print(rates)
+        model3 = joblib.load("regression DBS")
+        r1 = model3.predict([[rates]])
+        model4 = joblib.load("tree DBS")
+        r2 = model4.predict([[rates]])
+        return(render_template("index.html", result1 = r1, result2 = r2))
     else:
         return(render_template("index.html", result1 = "waiting", result2 = "waiting"))
     
